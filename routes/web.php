@@ -7,6 +7,7 @@ use App\Http\Controllers\MealController;
 use App\Http\Controllers\MealPreferenceController;
 use App\Http\Controllers\BazaarRecordController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\CostSharingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -55,6 +56,24 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:admin')->group(function () {
         Route::patch('expenses/{expense}/approve', [ExpenseController::class, 'approve'])->name('expenses.approve');
         Route::patch('expenses/{expense}/reject', [ExpenseController::class, 'reject'])->name('expenses.reject');
+    });
+    
+    // Cost Sharing (all users can view, admin/manager can manage)
+    Route::get('cost-sharing', [CostSharingController::class, 'index'])->name('cost-sharing.index');
+    Route::get('cost-sharing-summary', [CostSharingController::class, 'summary'])->name('cost-sharing.summary');
+    
+    Route::middleware('role:admin|manager')->group(function () {
+        Route::get('cost-sharing/create', [CostSharingController::class, 'create'])->name('cost-sharing.create');
+        Route::post('cost-sharing/calculate', [CostSharingController::class, 'calculate'])->name('cost-sharing.calculate');
+        Route::delete('cost-sharing/{costSharing}', [CostSharingController::class, 'destroy'])->name('cost-sharing.destroy');
+    });
+    
+    Route::get('cost-sharing/{costSharing}', [CostSharingController::class, 'show'])->name('cost-sharing.show');
+    
+    // Cost sharing status updates (Admin only)
+    Route::middleware('role:admin')->group(function () {
+        Route::patch('cost-sharing/{costSharing}/status', [CostSharingController::class, 'updateStatus'])->name('cost-sharing.update-status');
+        Route::post('cost-sharing/bulk-status', [CostSharingController::class, 'bulkUpdateStatus'])->name('cost-sharing.bulk-status');
     });
 });
 

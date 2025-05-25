@@ -36,6 +36,11 @@
                         {{ __('Expenses') }}
                     </x-nav-link>
                     
+                    <!-- Cost Sharing for all users (view), Admin/Manager (manage) -->
+                    <x-nav-link :href="route('cost-sharing.index')" :active="request()->routeIs('cost-sharing.*')">
+                        {{ __('Cost Sharing') }}
+                    </x-nav-link>
+                    
                     <!-- Admin only links -->
                     @if(auth()->user()->hasRole('admin'))
                         <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
@@ -116,6 +121,11 @@
             <!-- Expenses for all users (view), Admin/Manager (manage) -->
             <x-responsive-nav-link :href="route('expenses.index')" :active="request()->routeIs('expenses.*')">
                 {{ __('Expenses') }}
+            </x-responsive-nav-link>
+            
+            <!-- Cost Sharing for all users (view), Admin/Manager (manage) -->
+            <x-responsive-nav-link :href="route('cost-sharing.index')" :active="request()->routeIs('cost-sharing.*')">
+                {{ __('Cost Sharing') }}
             </x-responsive-nav-link>
             
             <!-- Admin only links -->
