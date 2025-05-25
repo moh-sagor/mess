@@ -15,14 +15,12 @@
                            class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
                             Back to Expenses
                         </a>
-                        @can('update', $expense)
-                            @if($expense->status === 'pending')
-                                <a href="{{ route('expenses.edit', $expense) }}" 
-                                   class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                    Edit Expense
-                                </a>
-                            @endif
-                        @endcan
+                        @if($expense->status === 'pending' && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('manager')))
+                            <a href="{{ route('expenses.edit', $expense) }}" 
+                               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                Edit Expense
+                            </a>
+                        @endif
                     </div>
                 </div>
 

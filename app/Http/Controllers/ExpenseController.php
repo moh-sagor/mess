@@ -98,7 +98,6 @@ class ExpenseController extends Controller
      */
     public function edit(Expense $expense)
     {
-        $this->authorize('update', $expense);
         
         $bazaarRecords = BazaarRecord::orderBy('purchase_date', 'desc')->get();
         $categories = [
@@ -118,7 +117,11 @@ class ExpenseController extends Controller
      */
     public function update(Request $request, Expense $expense)
     {
-        $this->authorize('update', $expense);
+        // Only allow updating pending expenses by admin/manager
+        if ($expense->status !== 'pending') {
+            return redirect()->back()
+                ->with('error', 'Only pending expenses can be updated.');
+        }
 
         $request->validate([
             'title' => 'required|string|max:255',
@@ -149,7 +152,6 @@ class ExpenseController extends Controller
      */
     public function destroy(Expense $expense)
     {
-        $this->authorize('delete', $expense);
         
         $expense->delete();
 

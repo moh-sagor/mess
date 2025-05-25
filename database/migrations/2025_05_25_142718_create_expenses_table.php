@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->decimal('amount', 10, 2);
-            $table->enum('category', ['food', 'utilities', 'maintenance', 'miscellaneous']);
+            $table->enum('category', ['food', 'utilities', 'maintenance', 'supplies', 'transportation', 'miscellaneous']);
             $table->date('expense_date');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->text('receipt_path')->nullable();
