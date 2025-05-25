@@ -31,6 +31,11 @@
                         </x-nav-link>
                     @endif
                     
+                    <!-- Expenses for all users (view), Admin/Manager (manage) -->
+                    <x-nav-link :href="route('expenses.index')" :active="request()->routeIs('expenses.*')">
+                        {{ __('Expenses') }}
+                    </x-nav-link>
+                    
                     <!-- Admin only links -->
                     @if(auth()->user()->hasRole('admin'))
                         <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
@@ -107,6 +112,11 @@
                     {{ __('Bazaar') }}
                 </x-responsive-nav-link>
             @endif
+            
+            <!-- Expenses for all users (view), Admin/Manager (manage) -->
+            <x-responsive-nav-link :href="route('expenses.index')" :active="request()->routeIs('expenses.*')">
+                {{ __('Expenses') }}
+            </x-responsive-nav-link>
             
             <!-- Admin only links -->
             @if(auth()->user()->hasRole('admin'))

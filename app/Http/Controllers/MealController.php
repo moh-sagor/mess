@@ -57,32 +57,60 @@ class MealController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Meal $meal)
     {
-        //
+        $meal->load('category');
+        return view('meals.show', compact('meal'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Meal $meal)
     {
-        //
+        $categories = MealCategory::where('is_active', true)->get();
+        return view('meals.edit', compact('meal', 'categories'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Meal $meal)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'type' => 'required|in:breakfast,lunch,dinner,snack',
+            'category_id' => 'required|exists:meal_categories,id',
+            'estimated_cost' => 'required|numeric|min:0',
+            'meal_date' => 'required|date',
+            'meal_time' => 'required',
+            'description' => 'nullable|string|max:500',
+            'is_active' => 'boolean',
+        ]);
+
+        $meal->update([
+            'name' => $request->name,
+            'type' => $request->type,
+            'category_id' => $request->category_id,
+            'estimated_cost' => $request->estimated_cost,
+            'meal_date' => $request->meal_date,
+            'meal_time' => $request->meal_time,
+            'description' => $request->description,
+            'is_active' => $request->has('is_active'),
+        ]);
+
+        return redirect()->route('meals.index')
+            ->with('success', 'Meal updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Meal $meal)
     {
-        //
+        $meal->delete();
+
+        return redirect()->route('meals.index')
+            ->with('success', 'Meal deleted successfully.');
     }
 }
