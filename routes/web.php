@@ -41,7 +41,7 @@ Route::middleware('auth')->group(function () {
     // Expenses (all users can view, admin/manager can manage)
     Route::get('expenses', [ExpenseController::class, 'index'])->name('expenses.index');
     
-    Route::middleware('role:admin,manager')->group(function () {
+    Route::middleware('role:admin|manager')->group(function () {
         Route::get('expenses/create', [ExpenseController::class, 'create'])->name('expenses.create');
         Route::post('expenses', [ExpenseController::class, 'store'])->name('expenses.store');
         Route::get('expenses/{expense}/edit', [ExpenseController::class, 'edit'])->name('expenses.edit');

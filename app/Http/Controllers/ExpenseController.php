@@ -162,7 +162,11 @@ class ExpenseController extends Controller
      */
     public function approve(Expense $expense)
     {
-        $this->authorize('approve', $expense);
+        // Only allow approval of pending expenses
+        if ($expense->status !== 'pending') {
+            return redirect()->back()
+                ->with('error', 'Only pending expenses can be approved.');
+        }
 
         $expense->update([
             'status' => 'approved',
@@ -179,7 +183,11 @@ class ExpenseController extends Controller
      */
     public function reject(Request $request, Expense $expense)
     {
-        $this->authorize('approve', $expense);
+        // Only allow rejection of pending expenses
+        if ($expense->status !== 'pending') {
+            return redirect()->back()
+                ->with('error', 'Only pending expenses can be rejected.');
+        }
 
         $request->validate([
             'rejection_reason' => 'required|string|max:500',
